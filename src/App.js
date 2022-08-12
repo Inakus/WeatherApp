@@ -1,65 +1,44 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import WeatherCard from "./Component/WeatherCard";
-import { Container } from "@mui/material";
+import { useState } from "react";
+import { Box, Container, createTheme, ThemeProvider } from "@mui/material";
 import SearchBar from "./Component/SearchBar";
 import { Stack } from "@mui/system";
+import NavBar from "./Component/NavBar";
+import OneDayForecast from "./Component/OneDayForecast";
+import FiveDayForecast from "./Component/FiveDayForecast";
 
-const apiKey = process.env.REACT_APP_WETHER_KEY;
+export const apiKey = process.env.REACT_APP_WETHER_KEY;
 
 function App() {
-  const [post, setPost] = useState({});
-  const [city, setCity] = useState("London");
-  const [units, setUnits] = useState("metric");
+  const [city, setCity] = useState('London');
+  const [mode, setMode] = useState('light');
+  const [change, setChange] = useState('One');
 
-  const weather = axios.create({
-    baseURL:
-      "https://api.openweathermap.org/data/2.5/weather?q=" +
-      city +
-      "&units=" +
-      units +
-      "&appid=" +
-      apiKey,
-  });
-
-  useEffect(() => {
-    async function getPost() {
-      const response = await weather.get("");
-      setPost(response.data);
+  const darkTheme = createTheme({
+    palette: {
+      mode: mode
     }
-    getPost();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [city, units]);
+  });
 
   function searchCity(newCity) {
     setCity(newCity);
   }
 
-  if (!post.weather || !post.main) return "No Post!!";
-
   return (
     <>
-
-    <Stack direction="column" spacing={2}>
-      <Container fixed>
-        <SearchBar search={searchCity}></SearchBar>
-      </Container>
-
-      <Container fixed>
-        <WeatherCard
-          img={
-            "http://openweathermap.org/img/wn/" +
-            post.weather[0].icon +
-            "@4x.png"
-          }
-          temp={post.main.temp}
-          cityName={post.name}
-          weather={post.weather[0].main}
-          description={post.weather[0].description}
-          unit={(newUnit) => setUnits(newUnit)}
-          ></WeatherCard>
-      </Container>
-    </Stack>
+    <ThemeProvider theme={darkTheme}>
+      <NavBar setMode={setMode} mode={mode} display={(dis) => setChange(dis)}></NavBar>
+      <Box bgcolor={"background.default"} color={"text.primary"} height="100vh" display="flex"> 
+      <Container sx={{ maxWidth: { sm: "sm", md: "sm" } }}>
+        <Stack direction="column" spacing={2} justifyContent="center">
+          <Box flex={2} pt={15}>
+            <SearchBar search={searchCity}></SearchBar>
+          </Box>
+          {change === "One" && <OneDayForecast citySearch={city}></OneDayForecast>}
+          {change === "Five" && <FiveDayForecast citySearch={city}></FiveDayForecast>}
+        </Stack>
+      </Container>  
+      </Box>
+    </ThemeProvider>
     </>
   );
 }

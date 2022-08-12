@@ -1,0 +1,58 @@
+import { Box } from "@mui/system";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { apiKey } from "../App";
+import WeatherCard from "./WeatherCard";
+
+export default function FiveDayForecast({ citySearch }) {
+  const [post, setPost] = useState({});
+  const [units, setUnits] = useState("metric");
+
+  const weather = axios.create({
+    baseURL:
+      "https://api.openweathermap.org/data/2.5/forecast?q=" +
+      citySearch +
+      "&units=" +
+      units +
+      "&appid=" +
+      apiKey,
+  });
+
+  useEffect(() => {
+    async function getPost() {
+      const response = await weather.get("").catch((err) => console.error(err));
+      setPost(response.data);
+    }
+    getPost();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [citySearch, units] );
+
+  const list = post.list;
+  
+  if (!list) return "No Post!!";
+
+  
+  console.log(post);        
+  return (
+    <Box>
+      {list.map((element, index) => {
+        return (
+          <WeatherCard
+            img={
+              "http://openweathermap.org/img/wn/" +
+              element.weather[0].icon +
+              "@4x.png"
+            }
+            temp={element.main.temp}
+            cityName={post.city.name}
+            weather={element.weather[0].main}
+            description={element.weather[0].description}
+            unit={(newUnit) => setUnits(newUnit)}
+            date={element.dt_txt}
+            key={index}
+          ></WeatherCard>
+        );
+      })}
+    </Box>
+  );
+}
