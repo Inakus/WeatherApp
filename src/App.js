@@ -27,7 +27,7 @@ function App() {
     <>
     <ThemeProvider theme={darkTheme}>
       <NavBar setMode={setMode} mode={mode} display={(dis) => setChange(dis)}></NavBar>
-      <Box bgcolor={"background.default"} color={"text.primary"} height="100vh" display="flex"> 
+      <Box bgcolor={"background.default"} color={"text.primary"} height={change === "One" ? '100vh' : '100%'} display="flex"> 
       <Container sx={{ maxWidth: { sm: "sm", md: "sm" } }}>
         <Stack direction="column" spacing={2} justifyContent="center">
           <Box flex={2} pt={15}>

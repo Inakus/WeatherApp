@@ -4,7 +4,6 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/system";
-import { useState } from "react";
 
 const StyleToolbar = styled(Toolbar)({
   display: "flex",
@@ -18,8 +17,6 @@ const Icon = styled(Box)({
 });
 
 export default function NavBar({ setMode, mode, display }) {
-    const [change, setChange] = useState('One');
-
 
   return (
     <AppBar position="fixed" color="primary">
@@ -31,8 +28,8 @@ export default function NavBar({ setMode, mode, display }) {
           color="inherit"  
           aria-label="outlined primary button group"
         >
-          <Button onClick={() => {setChange('One'); return display(change)}}>One day forecast</Button>
-          <Button onClick={() => {setChange('Five'); return display(change)}}>Five day forecast</Button>
+          <Button onClick={() => {return display('One')}}>One day forecast</Button>
+          <Button onClick={() => {return display('Five')}}>Five day forecast</Button>
         </ButtonGroup>
         <Icon>
           <LightMode></LightMode>

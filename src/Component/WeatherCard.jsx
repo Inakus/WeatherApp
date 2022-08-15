@@ -35,6 +35,7 @@ export default function WeatherCard({
   weather,
   description,
   unit,
+  giveUnit,
   date
 }) {
   const [newUnit, setNewUnit] = useState("metric");
@@ -49,18 +50,18 @@ export default function WeatherCard({
         {date && <Typography variant="body1" color="text.secondary">
           {date}
         </Typography>}
-        <ChangeTemp type={newUnit} temp={temp}></ChangeTemp>
+        <ChangeTemp type={!date ? newUnit : giveUnit} temp={temp}></ChangeTemp>
         <Typography variant="body2" color="text.secondary">
           {weather}
         </Typography>
       </CardContent>
       <CardActions>
-        <Unit
+        {!date && <Unit
           unit={(e) => {
             unit(e);
             setNewUnit(e);
           }}
-        ></Unit>
+        ></Unit>}
       </CardActions>
     </Card>
   );
